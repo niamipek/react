@@ -7,4 +7,7 @@ const fetchAllUsers = async () => {
   }));
   return filtered;
 };
-export { fetchAllUsers };
+const postCreateNewUser =(name, username) => {
+  return axios.post("/users", { name, username });
+} 
+export { fetchAllUsers , postCreateNewUser };

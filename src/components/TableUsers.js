@@ -4,6 +4,7 @@ import ReactPaginate from "react-paginate";
 import { fetchAllUsers } from "../services/UserService";
 import ModalAddNew from "./ModalAddNew";
 import ModalEditUser from "./ModalEditUser";
+import _, { set } from "lodash";
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -43,12 +44,13 @@ const TableUsers = (props) => {
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
   };
-  console.log("listUsers", listUsers);
-  // email: "Sincere@april.biz";
-  // id: 1;
-  // name: "Leanne Graham";
-  // username: "Bret";
-  // website: "hildegard.org";
+  const handleEditUserFromModal = (user) => {
+    let cloneListUsers = _.cloneDeep(listUsers);
+    let index=listUsers.findIndex(item => item.id === user.id);
+    cloneListUsers[index].name = user.name;
+    cloneListUsers[index].username = user.username;
+setListUsers(cloneListUsers);
+  }
   return (
     <>
       <div className="my-3 add-new">
@@ -123,6 +125,7 @@ const TableUsers = (props) => {
         show={isShowModalEditUser}
         dataUserEdit={dataUserEdit}
         handleClose={handleClose}
+        handleEditUserFromModal={handleEditUserFromModal}
       />
     </>
   );

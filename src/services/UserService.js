@@ -10,4 +10,7 @@ const fetchAllUsers = async () => {
 const postCreateNewUser =(name, username) => {
   return axios.post("/users", { name, username });
 } 
-export { fetchAllUsers , postCreateNewUser };
+const putUpdateUser =(name, username,id) => {
+return axios.put(`/users/${id}`, { name, username });
+}
+export { fetchAllUsers , postCreateNewUser,putUpdateUser };

@@ -1,13 +1,24 @@
 import { Modal, Button } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
+import { putUpdateUser,handleEditUserFromModal } from "../services/UserService";
+import { toast } from "react-toastify";
 const ModalEditUser = (props) => {
-  const { show, handleClose ,dataUserEdit} = props;
+  const { show, handleClose ,dataUserEdit,handleEditUserFromModal} = props;
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-    const handleEditUser = () => {
-
+    const handleEditUser = async() => {
+        let res= await putUpdateUser(name, username,dataUserEdit.id);
+        if(res) {
+          handleEditUserFromModal({
+            name: name,
+            username: username,
+            id: dataUserEdit.id
+            
+          });
+        handleClose();
+        toast.success("Update user succeed!");
     }
-    console.log("check dataUserEdit", dataUserEdit);
+  }
   const handleSaveUser = (name, username) => {
     if (!name || !username) {
       alert("Missing required parameters!");

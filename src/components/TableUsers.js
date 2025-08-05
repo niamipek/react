@@ -4,6 +4,7 @@ import ReactPaginate from "react-paginate";
 import { fetchAllUsers } from "../services/UserService";
 import ModalAddNew from "./ModalAddNew";
 import ModalEditUser from "./ModalEditUser";
+import ModalConfirm from "./ModalConfirm";
 import _, { set } from "lodash";
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -15,6 +16,7 @@ const TableUsers = (props) => {
   const [isShowModalAddNew, setShowModalAddNew] = useState(false);
   const [isShowModalEditUser, setIsShowModalEdit] = useState(false);
   const [dataUserEdit, setDataUserEdit] = useState({});
+  const [dataUserDelete, setDataUserDelete] = useState({});
   const handleEditUser = (user) => {
     setDataUserEdit(user);
     setIsShowModalEdit(true);
@@ -23,7 +25,8 @@ const TableUsers = (props) => {
   const handleClose = () => {
     setShowModalAddNew(false);
     setIsShowModalEdit(false);
-}
+    setIsShowModalDelete(false);
+  };
   const handleUpdateTableUser = (user) => {
     setListUsers([user, ...listUsers]);
   };
@@ -46,10 +49,16 @@ const TableUsers = (props) => {
   };
   const handleEditUserFromModal = (user) => {
     let cloneListUsers = _.cloneDeep(listUsers);
-    let index=listUsers.findIndex(item => item.id === user.id);
+    let index = listUsers.findIndex((item) => item.id === user.id);
     cloneListUsers[index].name = user.name;
     cloneListUsers[index].username = user.username;
-setListUsers(cloneListUsers);
+    setListUsers(cloneListUsers);
+  };
+  const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+  const handleDeleteUser = (user) => {
+    setIsShowModalDelete(true);
+    setDataUserDelete(user);
+    console.log("check user delete", user);
   }
   return (
     <>
@@ -91,7 +100,8 @@ setListUsers(cloneListUsers);
                     >
                       Edit
                     </button>
-                    <button className="btn btn-danger">Delete</button>
+                    <button className="btn btn-danger"
+                    onClick={()=>handleDeleteUser(item)}>Delete</button>
                   </td>
                 </tr>
               );
@@ -120,12 +130,19 @@ setListUsers(cloneListUsers);
         show={isShowModalAddNew}
         handleClose={() => setShowModalAddNew(false)}
         handleUpdateTableUser={handleUpdateTableUser}
+
       />
       <ModalEditUser
         show={isShowModalEditUser}
         dataUserEdit={dataUserEdit}
         handleClose={handleClose}
         handleEditUserFromModal={handleEditUserFromModal}
+      />
+      <ModalConfirm
+      show={isShowModalDelete}
+      handleClose={handleClose}
+      dataUserDelete={dataUserDelete}
+      
       />
     </>
   );

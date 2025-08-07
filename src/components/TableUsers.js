@@ -5,7 +5,7 @@ import { fetchAllUsers } from "../services/UserService";
 import ModalAddNew from "./ModalAddNew";
 import ModalEditUser from "./ModalEditUser";
 import ModalConfirm from "./ModalConfirm";
-import _, { set } from "lodash";
+import _, { debounce, get, set } from "lodash";
 import "./TableUsers.scss"; // Assuming you have a CSS file for styling
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -71,10 +71,24 @@ const TableUsers = (props) => {
     setSortBy(sortBy);
     setSortField(sortField);
     let cloneListUsers = _.cloneDeep(listUsers);
-    cloneListUsers=_.orderBy(cloneListUsers, [sortField], [sortBy]);
+    cloneListUsers = _.orderBy(cloneListUsers, [sortField], [sortBy]);
     setListUsers(cloneListUsers);
   };
-
+  const [keyWord, setKeyWord] = useState("");
+  const handleSearch =debounce ((event) => {
+    
+    let term = event.target.value;
+    console.log("check term", term);
+    if (term) {
+      let cloneListUsers = _.cloneDeep(listUsers);
+      cloneListUsers = cloneListUsers.filter((item) => {
+        return item.email.toLowerCase().includes(term.toLowerCase());
+      });
+      setListUsers(cloneListUsers);
+    } else {
+      getUsers();
+    }
+  },2000);
   return (
     <>
       <div className="my-3 add-new">
@@ -87,6 +101,14 @@ const TableUsers = (props) => {
         >
           Add new user
         </button>
+      </div>
+      <div className="col-4 my-3 search-user">
+        <input
+          className="form-control"
+          placeholder="Search user by email"
+          // value={keyWord}
+          onChange={(event) => handleSearch(event)}
+        />
       </div>
       <Table striped bordered hover size="sm">
         <thead>

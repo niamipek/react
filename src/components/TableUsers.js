@@ -7,6 +7,7 @@ import ModalEditUser from "./ModalEditUser";
 import ModalConfirm from "./ModalConfirm";
 import _, { debounce, get, set } from "lodash";
 import "./TableUsers.scss"; // Assuming you have a CSS file for styling
+import { CSVLink, CSVDownload } from "react-csv";
 const TableUsers = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -18,6 +19,7 @@ const TableUsers = (props) => {
   const [isShowModalEditUser, setIsShowModalEdit] = useState(false);
   const [dataUserEdit, setDataUserEdit] = useState({});
   const [dataUserDelete, setDataUserDelete] = useState({});
+  const [dataExport, setDataExport] = useState([]);
   const handleEditUser = (user) => {
     setDataUserEdit(user);
     setIsShowModalEdit(true);
@@ -75,8 +77,7 @@ const TableUsers = (props) => {
     setListUsers(cloneListUsers);
   };
   const [keyWord, setKeyWord] = useState("");
-  const handleSearch =debounce ((event) => {
-    
+  const handleSearch = debounce((event) => {
     let term = event.target.value;
     console.log("check term", term);
     if (term) {
@@ -88,19 +89,60 @@ const TableUsers = (props) => {
     } else {
       getUsers();
     }
-  },2000);
+  }, 2000);
+  const getUsersExport = (event, done) => {
+    let result = [];
+
+    if (listUsers && listUsers.length > 0) {
+      result.push(["Id", "Email", "Name", "Username"]);
+      listUsers.forEach((item) => {
+        result.push([item.id, item.email, item.name, item.username]);
+      });
+    }
+
+    // Đổi sang ; để Excel VN nhận dạng cột
+    const csvData = result.map((row) => row.join(";")).join("\n");
+
+    // Thêm BOM
+    const bomCsv = "\uFEFF" + csvData;
+
+    // Lưu vào state cho CSVLink dùng
+    setDataExport(bomCsv);
+
+    done();
+  };
+
   return (
     <>
       <div className="my-3 add-new">
         <span>
           <b>List User:</b>
         </span>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowModalAddNew(true)}
-        >
-          Add new user
-        </button>
+        <div className="group-btns">
+          <label htmlFor="fileInput" className="btn btn-warning">
+            <i className="fa-solid fa-file-import"></i>
+            Import
+          </label>
+          <input id="fileInput" type="file" hidden />
+
+          <CSVLink
+            filename={"users.csv"}
+            className="btn btn-primary"
+            data={dataExport}
+            asyncOnClick={true}
+            onClick={getUsersExport}
+            enclosingCharacter={""}
+          >
+            <i className="fa-solid fa-download"></i> Export
+          </CSVLink>
+
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowModalAddNew(true)}
+          >
+            <i className="fa-solid fa-circle-plus"></i> Add new user
+          </button>
+        </div>
       </div>
       <div className="col-4 my-3 search-user">
         <input

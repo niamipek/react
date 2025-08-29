@@ -1,6 +1,6 @@
 body {
   div {
-     }
+  }
 }
 body {
   margin: 0;
@@ -15,6 +15,96 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.input-2 {
+  position: relative;
+  i {
+    position: absolute;
+    top: 50%;
+    right: 12px;              // ghim bên phải, thay cho left: 406px
+    transform: translateY(-50%);
+    color: #1618238a;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 18px;          // kích thước cơ bản trên desktop
+    // đảm bảo vùng bấm đủ rộng trên mobile
+    padding: 8px;   
+  }
+  @media (max-width: 576px) {
+  .input-2 i { right: 10px; }
+  .input-2 input#pass { padding-right: 40px; }
+}
+
+/* Tablet (iPad đứng) */
+@media (min-width: 577px) and (max-width: 768px) {
+  .input-2 i { right: 12px; }
+  .input-2 input#pass { padding-right: 44px; }
+}
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* WebKit (phòng trường hợp một số biến thể) */
+input[type="password"]::-webkit-textfield-decoration-container,
+input[type="password"]::-webkit-clear-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none;
+}
+}
 .app-container {
- 
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    .title {
+      text-align: center;
+      font-size: 23px;
+      font-weight: 600;
+      padding-top: 30px;
+    }
+    .text {
+      font-weight: 600;
+      padding-bottom: 3px;
+    }
+    input#email,
+    input#pass {
+      padding: 12px 7px;
+      outline: none;
+      background: #1618230f;
+      border: #1618230f;
+      border-radius: 3px;
+      margin-bottom: 7px;
+      width: 100%;
+      &:hover {
+        background-color: #dedede;
+      }
+      &:focus,
+      &:focus-visible {
+        outline: none; // hoặc tùy biến: outline: 2px solid #aaa;
+        box-shadow: none;
+        // nếu framework (Bootstrap, v.v.) thêm box-shadow
+      }
+    }
+    button {
+      padding: 10px;
+      border-radius: 3px;
+      outline: none;
+      border: none;
+      background: #1618230f;
+      border: #1618230f;
+      &.active {
+        background-color: #fe2c55;
+        color: white;
+      }
+    }
+    button[disabled=disabled],button:disabled {
+      cursor: not-allowed !important;
+    }
+
+    .back {
+      text-align: center;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+  }
 }

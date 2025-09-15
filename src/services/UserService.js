@@ -16,4 +16,11 @@ return axios.put(`/users/${id}`, { name, username });
 const deleteUser = (id) => {
   return axios.delete(`/users/${id}`);
 };
-export { fetchAllUsers , postCreateNewUser,putUpdateUser, deleteUser };
+const loginApi = (email, password) => {
+  return axios.post("https://reqres.in/api/login", { email, password }
+    , {
+    headers: { "x-api-key": "reqres-free-v1" } // override baseURL
+  });
+};
+
+export { fetchAllUsers , postCreateNewUser,putUpdateUser, deleteUser,loginApi };
